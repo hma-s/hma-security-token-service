@@ -1,0 +1,38 @@
+#
+# Sample extended OpenLDAP schema
+#
+attributetype ( 1.3.6.1.4.1.4203.666.1.200
+        NAME 'hmaProjectName'
+        DESC 'Names of projects with which user is affiliated'
+        EQUALITY caseIgnoreMatch
+        SUBSTR caseIgnoreSubstringsMatch
+        SYNTAX 1.3.6.1.4.1.1466.115.121.1.15  SINGLE-VALUE)
+
+attributetype ( 1.3.6.1.4.1.4203.666.1.201
+        NAME 'hmaAccount'
+        DESC 'The HMA account number'
+        EQUALITY caseIgnoreMatch
+        SUBSTR caseIgnoreSubstringsMatch
+        SYNTAX 1.3.6.1.4.1.1466.115.121.1.15 SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.4203.666.1.202
+        NAME 'hmaServiceName'
+        DESC 'Associated services'
+        EQUALITY caseIgnoreMatch
+        SUBSTR caseIgnoreSubstringsMatch
+        SYNTAX 1.3.6.1.4.1.1466.115.121.1.15 SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.4203.666.1.203
+        NAME 'hmaUserProfile'
+        DESC 'User Profile'
+        EQUALITY caseIgnoreMatch
+        SUBSTR caseIgnoreSubstringsMatch
+        SYNTAX 1.3.6.1.4.1.1466.115.121.1.15 SINGLE-VALUE )
+
+# HMAUser
+objectClass     ( 1.3.6.1.4.1.4203.666.1.300
+    NAME 'HMAUser'
+    DESC 'Object class applied for the HMA user as an example of custom attributes'
+    SUP inetOrgPerson
+    STRUCTURAL
+    MAY  ( hmaProjectName $ hmaAccount $ hmaServiceName $ hmaUserProfile $ c ) )

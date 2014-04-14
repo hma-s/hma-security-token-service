@@ -1,0 +1,56 @@
+dn: dc=spacebel,dc=be
+objectClass: dcObject
+objectClass: organization
+dc: spacebel
+o: Spacebel Company
+
+dn: ou=Users,dc=spacebel,dc=be
+objectClass: organizationalUnit
+objectClass: top
+ou: Users
+
+dn: cn=TestUser1,ou=Users,dc=spacebel,dc=be
+objectClass: top
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: HMAUser
+c: BE
+cn: TestUser1
+facsimileTelephoneNumber: 02 658 2011
+hmaAccount: Test1
+hmaProjectName: Project1
+hmaServiceName: Service1
+hmaUserProfile: Commercial
+homePostalAddress: Belgium
+l: Hoeilaart
+mail: supports@spacebel.be
+sn: TestUser1
+st: -
+street: I. Vandammestraat
+uid: TestUser1
+o: Spacebel
+userPassword: TestUser1
+
+dn: cn=TestUser2,ou=Users,dc=spacebel,dc=be
+objectClass: top
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: HMAUser
+c: BE
+cn: TestUser2
+facsimileTelephoneNumber: 02 658 2011
+hmaAccount: Test2
+hmaProjectName: Project2
+hmaServiceName: Service2
+hmaUserProfile: Scientific
+homePostalAddress: Belgium
+l: Hoeilaart
+mail: supports@spacebel.be
+sn: TestUser2
+st: -
+street: I. Vandammestraat
+uid: TestUser2
+o: Spacebel
+userPassword: TestUser2

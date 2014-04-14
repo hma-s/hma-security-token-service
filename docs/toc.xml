@@ -1,0 +1,16 @@
+<toc label="Documentation - Authentication Service version 2.2">
+
+	<topic href="html/userGuide.htm" label="User Guide">
+		<topic href="html/userGuide.htm#Introduction" label="Introduction"/>
+		<topic href="html/userGuide.htm#Install" label="Install Procedure"/>
+		<topic href="html/userGuide.htm#Configure" label="Configure Procedure"/>		
+	</topic>
+
+	<topic href="html/developerGuide.htm" label="Developer Guide">
+		<topic href="html/developerGuide.htm#Software_Architecture" label="Software Architecture"/>
+		<topic href="api/overview-tree.html" label="API Documentation"/>
+	</topic>
+
+	<topic href="html/reference.htm" label="Reference">
+	</topic>
+</toc>

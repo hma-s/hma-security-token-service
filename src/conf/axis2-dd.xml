@@ -1,0 +1,19 @@
+<!-- $Id$ -->
+<!-- Axis2 service deployment description -->
+<service name="sts" scope="application" targetNamespace="http://docs.oasis-open.org/ws-sx/ws-trust/200512/">
+	<description>HMA Security Token Service</description>
+	<!-- <schema schemaNamespace="http://earth.esa.int/um/eop"/> 	
+	<messageReceivers>
+		<messageReceiver mep="http://www.w3.org/2004/08/wsdl/in-only" class="org.apache.axis2.rpc.receivers.RPCInOnlyMessageReceiver"/>
+		<messageReceiver mep="http://www.w3.org/2004/08/wsdl/in-out" class="org.apache.axis2.rpc.receivers.RPCMessageReceiver"/>
+	</messageReceivers>
+	-->
+
+	<schema schemaNamespace="http://docs.oasis-open.org/ws-sx/ws-trust/200512/"/>
+	
+	<operation name="RequestSecurityToken">
+        <messageReceiver class="org.apache.axis2.receivers.RawXMLINOutMessageReceiver"/>
+    </operation>
+	<parameter name="ServiceClass">be.spacebel.webservice.authentication.AuthenticationServiceImpl</parameter>
+	
+</service>
