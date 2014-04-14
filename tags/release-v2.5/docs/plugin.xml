@@ -1,0 +1,6 @@
+<plugin name="Documentation Plug-in - HMA Authentication Service version 1.0" id="be.spacebel.webservice.doc.user"
+version="1.0.0" provider-name="Spacebel">
+<extension point="org.eclipse.help.toc">
+<toc file="toc.xml" primary="true" />
+</extension>
+</plugin>

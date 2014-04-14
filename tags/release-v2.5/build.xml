@@ -1,0 +1,136 @@
+<?xml version="1.0"?>
+<!-- Ant build script, supporting Ant version 1.6.x or higher -->
+<project name="HMASecurityTokenService" default="help" basedir=".">
+	<!-- project propeties -->
+	<property environment="env"/>
+	<property name="version" value="v2.5"/>
+	<property name="softwareName" value="sts"/>
+	<property name="build.dir" value="build"/>
+	<property name="classes.dir" value="bin"/>
+	<property name="dist.dir" value="dist"/>
+	<property name="src.dir" value="src"/>
+	<property name="lib.dir" value="lib"/>
+	<property name="aar.file" value="${softwareName}.aar"/>
+	<property name="docs.dir" value="docs"/>
+	<target name="init">
+		<!-- Authentication service dependencies -->
+		<path id="authentication.dependancies.path">
+			<fileset dir="${lib.dir}">
+				<include name="**/*.jar"/>
+			</fileset>
+		</path>
+		<property name="authentication.lib.dependencies" refid="authentication.dependancies.path"/>
+	</target>
+	<!-- Removing temp files generated during the project build process. -->
+	<target name="clean">
+		<delete dir="${build.dir}"/>
+		<delete dir="${dist.dir}"/>
+		<delete dir="${classes.dir}"/>
+		<delete dir="${docs.dir}/api"/>
+	</target>
+	<!-- Sets up required directories and configuration -->
+	<target name="setup" depends="init">
+		<echo message="-----> Creating the required sub-directories "/>
+		<mkdir dir="${build.dir}"/>
+		<mkdir dir="${classes.dir}"/>
+		<mkdir dir="${dist.dir}"/>
+		<mkdir dir="${build.dir}/${aar.file}"/>
+		<mkdir dir="${build.dir}/${aar.file}/keystore"/>
+		<mkdir dir="${build.dir}/${aar.file}/log"/>
+	</target>
+	<!--  Compile the Java files -->
+	<target name="compile" depends="setup">
+		<echo message="-----> Compiling Java files"/>
+		<javac srcdir="${src.dir}" destdir="${classes.dir}" debug="on">
+			<classpath>
+				<pathelement path="${authentication.lib.dependencies}"/>
+			</classpath>
+		</javac>
+	</target>
+	<!-- Build an .aar file for axis2 web services -->
+	<target name="build" depends="compile">
+		<mkdir dir="${build.dir}/${aar.file}/META-INF"/>
+		<copy file="${src.dir}/conf/axis2-dd.xml" tofile="${build.dir}/${aar.file}/META-INF/services.xml" overwrite="true"/>
+		<mkdir dir="${build.dir}/${aar.file}/lib"/>
+		<copy todir="${build.dir}/${aar.file}/lib" flatten="true">
+			<fileset dir="${lib.dir}">
+				<include name="opensaml-1.1.jar"/>
+				<include name="xmlsec-1.4.2.jar"/>
+				<include name="commons-codec-1.3.jar"/>
+				<include name="commons-logging-1.03.jar"/>
+				<include name="log4j-1.2.5.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="${build.dir}/${aar.file}">
+			<fileset dir="${classes.dir}" includes="**/*.class"/>
+		</copy>		
+		<copy todir="${build.dir}/${aar.file}">
+			<fileset dir="${src.dir}/conf">
+				<!-- copy .properties file to build class directory -->
+				<include name="*.properties"/>
+			</fileset>
+		</copy>
+		<mkdir dir="${build.dir}/${aar.file}/ldap"/>
+		<copy todir="${build.dir}/${aar.file}/ldap">
+			<fileset dir="${src.dir}/others/ldap"/>
+		</copy>
+	</target>
+	<target name="createDemoKeystore">
+		<mkdir dir="${build.dir}/${aar.file}/keystore"/>
+		<property name="file" value="${build.dir}/${aar.file}/keystore/default.keystore"/>
+		<property name="cert.file" value="${build.dir}/${aar.file}/keystore/default.cert"/>
+		<property name="alias" value="urn:ceos:def:epr:spacebel:1.0:sts"/>
+		<property name="pass" value="changeit"/>
+		
+		<!-- valid for 10 years-->
+		<property name="validity" value="3650"/>
+		
+		<delete file="${file}/"/>
+		<genkey alias="${alias}" storepass="${pass}" keyalg="RSA" keystore="${file}" validity="${validity}">
+			<dname>
+				<param name="CN" value="HMA-S"/>
+				<param name="OU" value="Space"/>
+				<param name="O" value="Spacebel"/>
+				<param name="C" value="BE"/>
+			</dname>
+		</genkey>
+		<exec executable="keytool">
+			<arg value="-export"/>
+			<arg value="-alias"/>
+			<arg value="${alias}"/>
+			<arg value="-rfc"/>
+			<arg value="-file"/>
+			<arg value="${cert.file}"/>
+			<arg value="-keystore"/>
+			<arg value="${file}"/>
+			<arg value="-storepass"/>
+			<arg value="${pass}"/>		
+		</exec>
+		<echo message="Generated keystore at ${file}"/>
+	</target>	
+	<target name="javadocs" depends="compile">
+		<echo message="Generating java api documentation..."/>
+		<mkdir dir="${docs.dir}/api"/>
+		<javadoc packagenames="be.*" sourcepath="${src.dir}/java" destdir="${docs.dir}/api" author="true" version="true" private="true" classpathref="authentication.dependancies.path" windowtitle="${name} Java API" doctitle="${name} API (Version ${version})" />
+	</target>
+	<target name="dist" depends="build,javadocs,createDemoKeystore">
+		<mkdir dir="${dist.dir}"/>
+		<!-- binary-->	
+		<jar destfile="${dist.dir}/${softwareName}-bin-${version}.zip">
+			<fileset dir="${build.dir}"/>
+		</jar>
+		<!-- source-->
+		<jar destfile="${dist.dir}/${softwareName}-src-${version}.zip">
+			<fileset dir="${basedir}" excludes="build/**, dist/**, bin/**"/>
+		</jar>
+
+		<jar destfile="${dist.dir}/${softwareName}-docs-${version}.zip">
+			<fileset dir="${basedir}/docs" excludes="**/*.xsl,**/*.sed, **/*.bat, fp.js"/>
+		</jar>
+
+		<!-- source-->
+		<copy tofile="${dist.dir}/release-notes.txt" file="${basedir}/release-notes.txt"/>
+		<copy tofile="${dist.dir}/readme.txt" file="${basedir}/readme.txt"/>
+		<copy tofile="${dist.dir}/license.txt" file="${basedir}/license.txt	"/>	
+	</target>
+</project>

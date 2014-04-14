@@ -1,0 +1,67 @@
+--- 
+--- Release Notes - HMA Security Token Service version 2.5
+---
+
+- Support RST requests with parameter "AppliesTo". See section 6.4.1.1 of OGC 07-118r9, Version 1.1 for more information about how the parameter is used.
+- Support RST request with parameter "DelegateTo". See section 6.4.3.2 of OGC 07-118r9, Version 1.1 for more information about how the parameter is used.
+
+--- 
+--- Release Notes - HMA Security Token Service version 2.4
+---
+
+- Remove Id attribute in Assertion element and change signature URI reference to be equal to the value of AssertionID attribute
+- Correct XML canonicalization algorithm URI for SignedInfo to be non-exclusive  
+
+
+--- 
+--- Release Notes - HMA Security Token Service version 2.3
+---
+
+- Add optional parameters to deliver SAML token with format of older versions of OGC 07-118
+
+
+--- 
+--- Release Notes - HMA Security Token Service version 2.2
+---
+
+- Add optional check of registration state before issuing SAML token
+
+
+--- 
+--- Release Notes - HMA Security Token Service version 2.1
+---
+
+- Ability to register multiple trusted clients
+
+
+--- 
+--- Release Notes - HMA Security Token Service version 2.0
+---
+
+- Support STS service as defined in the OGC 07-118 version 0.1.0,
+  with RST with pasword and RST with signature
+
+--- 
+--- Release Notes - HMA Authentication Service version 1.2
+---
+
+- Put warning message if LDAP attribute unknown
+
+
+--- 
+--- Release Notes - HMA Authentication Service version 1.1
+---
+
+- Support authentication service as defined in the OGC 07-118 version 0.0.5
+  (i.e. removed certificate and non-standard Assertion element in SAML token)
+
+
+--- 
+--- Release Notes - HMA Authentication Service version 1.0
+---
+
+- Support authentication service as defined in the OGC 07-118 version 0.0.4
+- Allow to configure the list of SAML attributes corresponding to the user profile's LDAP attribute (see section 6.5.5 of OGC 07-118r1 version 0.0.4
+- Support Tomcat web server (version 5.5.xx or higher).
+- Support SSL access to the service operation "authenticate" thanks to the web server function (Tomcat SSL support)
+

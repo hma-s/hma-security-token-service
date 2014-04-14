@@ -1,0 +1,1183 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+
+<head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+<meta http-equiv="Content-Language" content="en-us">
+<title>User Guide - HMA Security Token Service</title>
+<link rel="stylesheet" type="text/css" href="../css/book.css">
+<style>
+<!--
+div.Section1
+	{page:Section1;}
+-->
+  </style>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<meta name="ProgId" content="Word.Document">
+<meta name="GENERATOR" content="Microsoft FrontPage 3.0">
+<meta name="Originator" content="Microsoft Word 11">
+<link rel="File-List"
+href="file:///C:\DOCUME~1\pds\LOCALS~1\Temp\msohtml1\01\clip_filelist.xml">
+<style>
+<!--
+ /* Style Definitions */
+ p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{mso-style-parent:"";
+	margin:0in;
+	margin-bottom:.0001pt;
+	mso-pagination:widow-orphan;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"Times New Roman";}
+span.EmailStyle15
+	{mso-style-type:personal;
+	mso-style-noshow:yes;
+	mso-ansi-font-size:10.0pt;
+	mso-bidi-font-size:10.0pt;
+	font-family:Arial;
+	mso-ascii-font-family:Arial;
+	mso-hansi-font-family:Arial;
+	mso-bidi-font-family:Arial;
+	color:windowtext;}
+@page Section1
+	{size:8.5in 11.0in;
+	margin:1.0in 1.25in 1.0in 1.25in;
+	mso-header-margin:.5in;
+	mso-footer-margin:.5in;
+	mso-paper-source:0;}
+div.Section1
+	{page:Section1;}
+-->
+      </style>
+</head>
+
+<body>
+
+<h1>User Guide - HMA Security Token Service version 2.5</h1>
+
+<h2><a name="Introduction">1. Introduction</a></h2>
+
+<p>The&nbsp; Security Token Service (STS) is a web service that implements, for the SOAP
+binding, the authentication use cases 1, 2, 3 and 4 defined in the OGC 07-118 version 1.1.
+The implementation has used the following software and libraries: 
+
+<ul>
+  <li>LDAP version 3 directory service</li>
+  <li>OpenSAML library version 1.1</li>
+  <li>Axis2 version 1.4 (web archive distribution package)</li>
+  <li>Apache Tomcat (6.0 or higher)</li>
+  <li>Java JDK (or JRE) version 1.7 or higher.</li>
+  <li>Ant build script tool version 1.6.2 or higher.</li>
+</ul>
+
+<p>In this document, you can find the manuals for: 
+
+<ul>
+  <li>installing the Security Token Service.</li>
+  <li>integrate the service with authorization service(s).</li>
+</ul>
+
+<h2><a name="Install">2. Install</a></h2>
+
+<p>The HMA Security Token Service can be installed using different methods depending on
+the availability of the hardware and software. The simplest method is to install the
+service onto an existing server that already has: 
+
+<ul>
+  <li>a tomcat server installed with Axis2 web application that allows web service access
+    (SOAP/HTTP(S)) to the Security Token Service.</li>
+  <li>a connection to an LDAP version 3 directory service to authenticate users' credentials
+    and retrieve users' information.</li>
+</ul>
+
+<p>In this case, the installation procedure is as follows: 
+
+<ul>
+  <li>Deploy the Security Token Service by using an Axis2 deployable archive file (sts.aar
+    from the binary package sts-bin-v2.5.zip).</li>
+  <li>Reconfigure the LDAP directory to support the data schema/attributes required by the
+    Security Token Service (see the section &quot;Configure Security Token Service&quot;
+    below).</li>
+</ul>
+
+<p>The following sections describe a complete procedure that allows to install the
+Security Token Service on an empty machine with only operating system software installed.
+The procedure has been tested successfully on the following system and software files: </p>
+
+<p>System: 
+
+<ul>
+  <li>An Intel Xenon PC with 1.7 GHz CPU, 1 GB RAM, 50 GB, with Red Hat Enterprise Linux
+    Server release 6.3 installed.</li>
+</ul>
+
+<p>Software: </p>
+
+<table width="94%" border="1">
+<tbody>
+  <tr>
+    <td width="39%">&nbsp;</td>
+    <td width="39%">Installer binary package file</td>
+    <td width="49%">Project website and/or location where the software binary package can be
+    obtained.</td>
+  </tr>
+  <tr>
+    <td width="39%">OpenLDAP version 2.4.23-26</td>
+    <td width="39%">openldap-2.4.23-26.el6.x86_64.rpm<p>openldap-servers-2.4.23-26.el6.x86_64.rpm</p>
+    <p>openldap-clients-2.4.23-26.el6.x86_64.rpm</td>
+    <td width="49%"><a href="http://www.openldap.org">http://www.openldap.org</a><p>The RPM
+    package is available on the software CDROM &quot;Red Hat Enterprise Linux Server release
+    6.3&quot;.</td>
+  </tr>
+  <tr>
+    <td width="39%">Oracle/Sun JDK version 1.7.0_45</td>
+    <td width="39%">jdk-7u45-linux-x64.rpm</td>
+    <td width="49%"><a
+    href="http://www.oracle.com/technetwork/java/javasebusiness/downloads/java-archive-downloads-javase6-419409.html"></a>http://www.oracle.com/technetwork/java</td>
+  </tr>
+  <tr>
+    <td width="39%">Apache tomcat 6.0.37</td>
+    <td width="39%">apache-tomcat-6.0.37.tar.gz</td>
+    <td width="49%">http://apache.cu.be/tomcat/tomcat-6/v6.0.37/bin/apache-tomcat-6.0.37.tar.gz</td>
+  </tr>
+  <tr>
+    <td width="39%">Apache Ant version 1.6.2 </td>
+    <td width="39%">apache-ant-1.6.2-bin.zip</td>
+    <td width="49%">http://archive.apache.org/dist/ant/binaries/apache-ant-1.6.2-bin.zip</td>
+  </tr>
+  <tr>
+    <td width="39%">Apache Axis2 version 1.4</td>
+    <td width="39%">axis2-1.4.zip</td>
+    <td width="49%"><a href="http://axis.apache.org/axis2/java/core/"></a>http://archive.apache.org/dist/ws/axis2/1_4/axis2-1.4.zip</td>
+  </tr>
+  <tr>
+    <td width="39%">Security Token Service version 2.5</td>
+    <td width="39%">sts-bin-v2.5.zip</td>
+    <td width="49%">http://code.google.com/p/hma-security-token-service</td>
+  </tr>
+  <tr>
+    <td width="39%">&nbsp;</td>
+    <td width="39%">&nbsp;</td>
+    <td width="49%">&nbsp;</td>
+  </tr>
+</tbody>
+</table>
+
+<p>The procedure includes the following steps: 
+
+<ul>
+  <li>Install OpenLDAP</li>
+  <li>Install Java JDK</li>
+  <li>Install Apache Tomcat</li>
+  <li>Install Axis2 web application</li>
+  <li>Install HMA Security Token Service</li>
+  <li>Test the installation.</li>
+</ul>
+
+<p>Note: the procedure's steps should be executed step by step and in the order they
+appear in this document. In the steps' description, $software is used to reference to a
+local directory on the system where the software binary package files listed on the table
+above are put.</p>
+
+<h3>2.1 Install OpenLDAP</h3>
+
+<h4>Step 1: Install OpenLDAP</h4>
+
+<p>If the software is not yet installed during the OS system installation, log in to the
+system under root and go to directory $software to execute the following command:</p>
+
+<p>root&gt;openldap-2.4.23-26.el6.x86_64.rpm</p>
+
+<p>root&gt;openldap-servers-2.4.23-26.el6.x86_64.rpm</p>
+
+<p>root&gt;openldap-clients-2.4.23-26.el6.x86_64.rpm</p>
+
+<p>Follow the command instruction to have the software installed completely.</p>
+
+<p>Run the following command to have the LDAP service started together with the system
+boot</p>
+
+<p>root&gt;chkconfig slapd on</p>
+
+<p>Start the directory service for the first time for test</p>
+
+<p>root&gt;service slapd start</p>
+
+<p>The last command should print a log &quot;Starting slapd: [ OK ]&quot; if the
+installation is successful.</p>
+
+<p>Note: the current step installs OpenLDAP software files to directory /etc/openldap.</p>
+
+<h4>Step 2: Configure the LDAP directory service</h4>
+
+<p>The present step allows to specify the LDAP directory service, including the specific
+attributes needed in the LDAP directory, by means of LDAP schema file(s). The schema
+file(s) are to be defined according to the needs of the application using the LDAP
+directory, since OGC 07-118 version 0.1.0 does not specify a list of attributes
+(contrarily to version 0.0.4). Note that the inetOrgPerson schema (RFC 2798) is already
+defined in OpenLDAP; provided that inetOrgPersonuser attributes are sufficient, the
+definition of a new schema is not required. </p>
+
+<p>The following instructions include the hmaOpenLDAP.schema into the software
+installation, <strong>as an example</strong> of extending LDAP schema for new attributes
+and object types that are not yet defined/available in RFC 2798. This hmaOpenLDAP schema
+registers a new object &quot;HMAUser&quot; that has sufficient attributes to fulfill the
+LDAP-SAML mapping, which produces a SAML token as per the example on table 2 of OGC
+-07-118r9 Issue 1.1.</p>
+
+<p>For more information about OpenLDAP extending schema, see <a
+href="http://www.openldap.org/doc/admin24/schema.html">http://www.openldap.org/doc/admin24/schema.html</a></p>
+
+<p>As root on the system: 
+
+<ul>
+  <li>copy file hmaOpenLDAP.schema (from package sts-bin-v2.5.zip, at path sts.aar/ldap) to
+    directory /etc/openldap/schema</li>
+  <li>copy file slapd.conf (from package sts-bin-v2.5.zip, at path sts.aar/ldap) to directory
+    /etc/openldap.</li>
+  <li>edit file slapd.conf (copied above) to apply your system information, as follows:<ul>
+      <li>change suffix from &quot;dc=spacebel,dc=be&quot; to a new LDAP suffix that fits your
+        case.</li>
+      <li>change rootdn from &quot;cn=ldapRoot,dc=spacebel,dc=be&quot; to another value of your
+        system, where ldapRoot is the directory admin account name and
+        &quot;dc=spacebel,dc=be&quot; must be set to the new LDAP suffix said above.</li>
+      <li>change rootpw from secret to a new password for the directory admin account.</li>
+    </ul>
+  </li>
+</ul>
+
+<p>When finish, go to directory /etc/openldap to run the following commands to apply the
+change made above:</p>
+
+<p>Stop the slapd service if it is running:</p>
+
+<p>root&gt;service slapd stop</p>
+
+<p>Apply the configuration:</p>
+
+<p>root&gt;mv /etc/openldap/slapd.d /etc/openldap/slapd.d-bk</p>
+
+<p>root&gt;mkdir /etc/openldap/slapd.d</p>
+
+<p>root&gt;slaptest -f /etc/openldap/slapd.conf -F /etc/openldap/slapd.d</p>
+
+<p>root&gt;chown -R ldap:ldap /var/lib/ldap</p>
+
+<p>root&gt;chown -R ldap:ldap /etc/openldap/slapd.d</p>
+
+<p>Start slapd service for testing:</p>
+
+<p>root&gt;service slapd start</p>
+
+<p>The last command should print &quot;Starting slapd: [ OK ]&quot; if the configuration
+is successful.</p>
+
+<h4>Step 3: Initiate the HMA user directory tree</h4>
+
+<p>This step is to create the base entries for appending the HMA user data and to insert
+initial user entries (for testing purposes):</p>
+
+<p>Copy file testUsers.ldif (from package sts-bin-v2.5.zip, at path sts.aar/ldap) to
+directory /etc/openldap.</p>
+
+<p>Go to directory /etc/openldap to run the following command: 
+
+<ul>
+  <li>ldapadd -x -D &quot;<b>cn=ldapRoot,dc=spacebel,dc=be</b>&quot; -w <b>secret </b>-f&nbsp;
+    testUsers.ldif</li>
+</ul>
+
+<p>Note to replace the values in the bold texts with the information for your system:
+&quot;cn=ldapRoot, dc=spacebel,dc=be&quot; is replaced by the rootdn applied in Step 2
+above; &quot;secret&quot; is replaced by the rootpw applied in Step 2 above.</p>
+
+<p>For more information, refer to the product documentation at <a
+href="http://www.openldap.org/doc/admin24/index.html">http://www.openldap.org/doc/admin24/index.html</a></p>
+
+<h3>2.2 Install JDK</h3>
+
+<p>Sign in the installing machine under root user.</p>
+
+<p>Change command prompt to directory $softwareDir, and run the following command: </p>
+
+<p>root&gt;rpm -Uvh jdk-7u7-linux-x64.rpm</p>
+
+<p>Run this command to test the installation</p>
+
+<p>root&gt;java -version.</p>
+
+<p>The last command should prints &quot;java version &quot;1.7.0_45&quot;...&quot; if the
+installation is successful.</p>
+
+<h3>2.3 Install Tomcat</h3>
+
+<p>Step 1: install software file</p>
+
+<p>As root, expand the zip file $softwareDir/apache-tomcat-6.0.37.tar.gz to directory on
+the machine /apps/. This will create a new directory &quot;apache-tomcat-6.0.37&quot;
+under the /apps directory.</p>
+
+<p>This new directory &quot;apache-tomcat-6.0.37&quot; is referenced later on as
+$TOMCAT_HOME.</p>
+
+<p>Step 2: Configure the default HTTP ports</p>
+
+<p>Go to directory $TOMCAT_HOME to run the following commands to configure HTTP access
+port</p>
+
+<p>root&gt;sed -i.bk &quot;s/8080/80/g&quot; conf/server.xml</p>
+
+<p>root&gt;sed -i &quot;s/8443/443/g&quot; conf/server.xml</p>
+
+<p>Step 3: Configure SSL keys HTTPs connection</p>
+
+<p>And run the following commands to create a self-signed key to be used for HTTPs
+connections supported by this Tomcat server.</p>
+
+<p>root&gt;mkdir -p /apps/conf/keystores</p>
+
+<p>root&gt;/usr/java/default/bin/keytool -genkey -alias tomcat -keyalg RSA -validity 3650
+-keystore /apps/conf/tomcat.keystore</p>
+
+<p>Anwser the question prompted by the last command, to have the key generated. When
+prompted for the password, enter &quot;changeit&quot;. </p>
+
+<p>You can apply other password instead. However in that case, you need to set it to the
+tomcat server.xml configuration.</p>
+
+<p>Edit the conf/server.xml file to apply the keystore generated above, as follows:</p>
+
+<p>Replace the following text in the file:</p>
+
+<table border="1" width="100%">
+  <tr>
+    <td>&lt;!--<br>
+    &lt;Connector port=&quot;443&quot; protocol=&quot;HTTP/1.1&quot;
+    SSLEnabled=&quot;true&quot;<br>
+    maxThreads=&quot;150&quot; scheme=&quot;https&quot; secure=&quot;true&quot;<br>
+    clientAuth=&quot;false&quot; sslProtocol=&quot;TLS&quot; /&gt;<br>
+    --&gt;</td>
+  </tr>
+</table>
+
+<p>by the following new text:</p>
+
+<table border="1" width="100%">
+  <tr>
+    <td>&lt;Connector port=&quot;443&quot; protocol=&quot;HTTP/1.1&quot;
+    SSLEnabled=&quot;true&quot; maxThreads=&quot;150&quot; scheme=&quot;https&quot;
+    secure=&quot;true&quot;<br>
+    clientAuth=&quot;false&quot; sslProtocol=&quot;TLS&quot;
+    keystoreFile=&quot;/apps/conf/keystores/tomcat.keystore&quot;
+    keystorePass=&quot;changeit&quot; /&gt;</td>
+  </tr>
+</table>
+
+<p>Step 4: Register tomcat service to the system</p>
+
+<p>Create new file /etc/init.d/tomcat with the following content:</p>
+
+<table border="1" width="577">
+  <tr>
+    <td width="571">#&nbsp;&nbsp;&nbsp; This is the init script for starting up the Tomcat
+    server<br>
+    #<br>
+    # chkconfig: 345 91 10 <br>
+    # description: Starts and stops the Tomcat daemon.<br>
+    #<br>
+    <br>
+    # Source function library.<br>
+    . /etc/rc.d/init.d/functions<br>
+    <br>
+    # Get config.<br>
+    . /etc/sysconfig/network<br>
+    <br>
+    # Check that networking is up.<br>
+    [ &quot;${NETWORKING}&quot; = &quot;no&quot; ] &amp;&amp; exit 0<br>
+    <br>
+    tomcat=/apps/apache-tomcat-6.0.37<br>
+    startup=$tomcat/bin/startup.sh<br>
+    shutdown=$tomcat/bin/shutdown.sh<br>
+    start(){<br>
+    &nbsp;&nbsp;&nbsp; echo -n $&quot;Starting Tomcat service: &quot;<br>
+    &nbsp;&nbsp;&nbsp; $startup<br>
+    &nbsp;&nbsp;&nbsp; RETVAL=$?<br>
+    &nbsp;&nbsp;&nbsp; echo<br>
+    }<br>
+    <br>
+    stop(){<br>
+    &nbsp;&nbsp;&nbsp; echo -n &quot;Stopping Tomcat service: &quot;<br>
+    &nbsp;&nbsp;&nbsp; $shutdown<br>
+    &nbsp;&nbsp;&nbsp; RETVAL=$?<br>
+    &nbsp;&nbsp;&nbsp; echo<br>
+    }<br>
+    <br>
+    restart(){<br>
+    stop<br>
+    sleep 30<br>
+    start<br>
+    }<br>
+    <br>
+    # See how we were called.<br>
+    case &quot;$1&quot; in<br>
+    start)<br>
+    &nbsp;&nbsp;&nbsp; start<br>
+    &nbsp;&nbsp;&nbsp; ;;<br>
+    stop)<br>
+    &nbsp;&nbsp;&nbsp; stop<br>
+    &nbsp;&nbsp;&nbsp; ;;<br>
+    status)<br>
+    # This doesn't work ;)<br>
+    &nbsp;&nbsp;&nbsp; status tomcat<br>
+    &nbsp;&nbsp;&nbsp; ;;<br>
+    restart)<br>
+    &nbsp;&nbsp;&nbsp; restart<br>
+    &nbsp;&nbsp;&nbsp; ;;<br>
+    *)<br>
+    &nbsp;&nbsp;&nbsp; echo $&quot;Usage: $0 {start|stop|status|restart}&quot;<br>
+    &nbsp;&nbsp;&nbsp; exit 1<br>
+    esac<br>
+    <br>
+    exit 0</td>
+  </tr>
+</table>
+
+<p>Run the following command to register the tomcat service to boot process</p>
+
+<p>root&gt;chmod +x /etc/init.d/tomcat</p>
+
+<p>root&gt;chkconfig --add tomcat</p>
+
+<p>Step 5: Start tomcat service to test the installation</p>
+
+<p>root&gt;service tomcat start</p>
+
+<p>Open a browser and visit this URL <a href="http://machine-ip">http://server-ip</a>,
+where server-ip is replaced by the IP address or the full domain name of the machine.</p>
+
+<p>You should see the tomcat home page if the installation is successful.</p>
+
+<h3>2.4 Install Axis2</h3>
+
+<p>Copy the file $softwareDir/axis2.war to the Tomcat deployment directory
+$TOMCAT_HOME/webapps.</p>
+
+<p><span lang="EN-US">Edit file $TOMCAT_HOME/webapps/axis2/WEB-INF/conf/axis2.xml to set
+&#147;true&#148; value for the parameter &#147;disableSOAP12&#148;.<o:p></o:p></span></p>
+<span lang="EN-GB"
+style="font-size:10.0pt;font-family:&quot;Tahoma&quot;,&quot;sans-serif&quot;;
+mso-fareast-font-family:&quot;Times New Roman&quot;;mso-ansi-language:EN-GB;mso-fareast-language:
+EN-US;mso-bidi-language:AR-SA">
+
+<p>&lt;parameter name=&quot;disableSOAP12&quot;
+locked=&quot;true&quot;&gt;true&lt;/parameter&gt;</span></p>
+
+<h3>2.5 Install HMA Security Token Service</h3>
+
+<p>Change the command prompt to the directory $softwareDir/ to run the following commands:
+
+<ul>
+  <li>unzip sts-bin-v2.5.zip</li>
+</ul>
+
+<p>A directory named &quot;sts.aar&quot; will appear under the directory $softwareDir.</p>
+
+<p>Copy the directory &quot;sts.aar&quot; to the Axis2 service home directory
+$TOMCAT_HOME/webapps/axis2/WEB-INF/services/<br>
+</p>
+
+<p style="font-weight: bold;">authentication-service.properties file<br>
+</p>
+
+<p>Update the file
+$TOMCAT_HOME/webapps/axis2/WEB-INF/services/sts.aar.aar/authentication-service.properties
+to have the values of your system, as described in the following table:</p>
+
+<table width="100%" border="1" height="274">
+<tbody>
+  <tr>
+    <td width="19%" height="19">LDAP_URL</td>
+    <td width="81%" height="19"><br>
+    URL to connect to the LDAP directory, e.g, ldap://localhost:389 <br>
+    (see the ldap configuration in section &quot;Install LDAP&quot;.<br>
+    <br>
+    </td>
+    <td style="vertical-align: top;"><br>
+    </td>
+  </tr>
+  <tr>
+    <td width="19%" height="19">LDAPSearchContext</td>
+    <td width="81%" height="19"><br>
+    The root position where ldap searching action is started from, e.g, dc=spacebel,dc=be <br>
+    (see the ldap configuration in section &quot;Install LDAP&quot;.<br>
+    <br>
+    </td>
+    <td style="vertical-align: top;"><br>
+    <p>&nbsp;</td>
+  </tr>
+  <tr>
+    <td width="19%" height="19">LDAPPrincipal</td>
+    <td width="81%" height="19">The string used to connect to the LDAP under the admin user,
+    e.g. cn=ldapRoot,dc=spacebel,dc=be</td>
+    <td style="vertical-align: top;">&nbsp;</td>
+  </tr>
+  <tr>
+    <td width="19%" height="19">LDAPCredentials</td>
+    <td width="81%" height="19">The password of the admin user, e.g. secret</td>
+    <td style="vertical-align: top;">&nbsp;</td>
+  </tr>
+  <tr>
+    <td width="19%" height="19">KEYSTORE_LOCATION</td>
+    <td width="81%" height="19"><br>
+    The location of the keystore file. The Security Token Service include a keystore for test
+    and demonstration purpose. This demonstration keystore is located at:<br>
+    $TOMCAT_HOME/webapps/axis2/WEB-INF/services/sts.aar.aar/keystore/demokeystore. <p>The
+    keystore file contains a pair of public and private keys with alias 'authenticate'. See
+    the following section for more information about the SSL keys used by the Security Token
+    Service.</td>
+    <td style="vertical-align: top;"><br>
+    </td>
+  </tr>
+  <tr>
+    <td width="19%" height="19">KEYSTORE_PASSWORD</td>
+    <td width="81%" height="19"><br>
+    Keystore password<br>
+    <br>
+    </td>
+    <td style="vertical-align: top;"><br>
+    </td>
+  </tr>
+  <tr>
+    <td width="19%" height="19">AUTHENTICATION_CERTIFICATE_ALIAS</td>
+    <td width="81%" height="19"><br>
+    Alias of certificate containing the private key of the STS, used to sign SAML tokens<br>
+    <br>
+    </td>
+    <td style="vertical-align: top;"><br>
+    </td>
+  </tr>
+  <tr>
+    <td width="19%" height="19">AUTHENTICATION_CERTIFICATE_PASSWORD</td>
+    <td width="81%" height="19"><br>
+    Password associated to AUTHENTICATION_CERTIFICATE_ALIAS<br>
+    <br>
+    </td>
+    <td style="vertical-align: top;"><br>
+    </td>
+  </tr>
+  <tr>
+    <td width="19%" height="19">AUTHORISATION_CERTIFICATE_ALIAS</td>
+    <td width="81%" height="19"><br>
+    Alias of certificate containing the public key of the authorisation service, used to
+    encrypt the SAML token (see 3.1)<br>
+    <br>
+    </td>
+    <td style="vertical-align: top;"><br>
+    </td>
+  </tr>
+  <tr>
+    <td style="vertical-align: top;"><br>
+    CLIENT_CERTIFICATE_ALIASES<br>
+    </td>
+    <td style="vertical-align: top;"><br>
+    Coma-separated list with aliases of certificate containing the public keys of trusted STS
+    clients, used to verify RST signature (used only for RST with signature) (see 3.2); if no
+    client is trusted for issuing RST with signature, then the value shall be empty<br>
+    <br>
+    </td>
+    <td style="vertical-align: top;"><br>
+    </td>
+  </tr>
+  <tr>
+    <td style="vertical-align: top;"><br>
+    REGISTRATION_STATE_ATTRIBUTE_NAME<br>
+    </td>
+    <td style="vertical-align: top;"><br>
+    Optional; if set, then an extra check is made on RST before issuing SAML token: the
+    specified user shall have a LDAP attribute named as the value of
+    REGISTRATION_STATE_ATTRIBUTE_NAME and this attribute shall have the same value as
+    REGISTRATION_STATE_ATTRIBUTE_VALUE; if this checks fails, then the RST fails<br>
+    <br>
+    </td>
+    <td style="vertical-align: top;"><br>
+    </td>
+  </tr>
+  <tr>
+    <td style="vertical-align: top;"><br>
+    REGISTRATION_STATE_ATTRIBUTE_VALUE<br>
+    </td>
+    <td style="vertical-align: top;"><br>
+    Optional; see REGISTRATION_STATE_ATTRIBUTE_NAME<br>
+    <br>
+    </td>
+    <td style="vertical-align: top;"><br>
+    </td>
+  </tr>
+  <tr>
+    <td width="19%" height="19">ISSUER_NAME</td>
+    <td width="81%" height="19"><br>
+    Name of the SAML token issuer<br>
+    <br>
+    </td>
+    <td style="vertical-align: top;"><br>
+    </td>
+  </tr>
+  <tr>
+    <td width="19%" height="19">SAML_TOKEN_EXPIRY_PERIOD</td>
+    <td width="81%" height="19"><br>
+    The period during which the SAML token is still valid.<br>
+    <br>
+    </td>
+    <td style="vertical-align: top;"><br>
+    </td>
+  </tr>
+  <tr>
+    <td width="19%" height="19">SAML_ASSERTION_ID_PREFIX</td>
+    <td width="81%" height="19"><br>
+    Prefix of the SAML assertion identifier.<br>
+    <br>
+    </td>
+    <td style="vertical-align: top;"><br>
+    </td>
+  </tr>
+  <tr>
+    <td style="vertical-align: top;"><br>
+    SAML_ASSERTION_ELEMENT<br>
+    </td>
+    <td style="vertical-align: top;"><br>
+    Optional, used for SAML token backward compatibility with OGC 07-118 v0.0.4 or before; it
+    impacts the SAML token returned in &lt;wst:RequestedSecurityToken&gt; of RSTR;<br>
+    - if set to True, then the SAML token is an element &lt;Assertion
+    xmlns=&quot;http://earth.esa.int/um/eop/saml&quot;&gt;, parent of a
+    &lt;xenc:EncryptedData&gt; element, with &quot;Content&quot; encryption type; this is the
+    format defined in OGC 07-118 v0.0.4 or before<br>
+    - otherwise (or if SAML_ASSERTION_ELEMENT is absent), the SAML token is directly the
+    &lt;xenc:EncryptedData&gt; element, with &quot;Element&quot; encryption type; this is the
+    format defined in OGC 07-118 v0.0.5 or after<br>
+    <br>
+    </td>
+    <td style="vertical-align: top;"><br>
+    </td>
+  </tr>
+  <tr>
+    <td style="vertical-align: top;"><br>
+    SAML_OLD_SIGNATURE<br>
+    </td>
+    <td style="vertical-align: top;"><br>
+    Optional, used for SAML token backward compatibility with OGC 07-118 v0.0.5 or before; it
+    impacts the signature of SAML token returned in &lt;wst:RequestedSecurityToken&gt; of
+    RSTR;<br>
+    - if set to True, then the canonicalization method algorithm used in signature is &quot; <!--[if gte mso 9]><xml>
+
+
+ <o:OfficeDocumentSettings>
+
+
+  <o:DoNotRelyOnCSS/>
+
+
+ </o:OfficeDocumentSettings>
+
+
+</xml><![endif]--><!--[if gte mso 9]><xml>
+
+
+ <w:WordDocument>
+
+
+  <w:View>Normal</w:View>
+
+
+  <w:Zoom>0</w:Zoom>
+
+
+  <w:PunctuationKerning/>
+
+
+  <w:ValidateAgainstSchemas/>
+
+
+  <w:SaveIfXMLInvalid>false</w:SaveIfXMLInvalid>
+
+
+  <w:IgnoreMixedContent>false</w:IgnoreMixedContent>
+
+
+  <w:AlwaysShowPlaceholderText>false</w:AlwaysShowPlaceholderText>
+
+
+  <w:Compatibility>
+
+
+   <w:BreakWrappedTables/>
+
+
+   <w:SnapToGridInCell/>
+
+
+   <w:WrapTextWithPunct/>
+
+
+   <w:UseAsianBreakRules/>
+
+
+   <w:DontGrowAutofit/>
+
+
+  </w:Compatibility>
+
+
+  <w:BrowserLevel>MicrosoftInternetExplorer4</w:BrowserLevel>
+
+
+ </w:WordDocument>
+
+
+</xml><![endif]--><!--[if gte mso 9]><xml>
+
+
+ <w:LatentStyles DefLockedState="false" LatentStyleCount="156">
+
+
+ </w:LatentStyles>
+
+
+</xml><![endif]--> <!--[if gte mso 10]>
+
+
+<style>
+
+
+ /* Style Definitions */
+
+
+ table.MsoNormalTable
+
+
+	{mso-style-name:"Table Normal";
+
+
+	mso-tstyle-rowband-size:0;
+
+
+	mso-tstyle-colband-size:0;
+
+
+	mso-style-noshow:yes;
+
+
+	mso-style-parent:"";
+
+
+	mso-padding-alt:0in 5.4pt 0in 5.4pt;
+
+
+	mso-para-margin:0in;
+
+
+	mso-para-margin-bottom:.0001pt;
+
+
+	mso-pagination:widow-orphan;
+
+
+	font-size:10.0pt;
+
+
+	font-family:"Times New Roman";
+
+
+	mso-ansi-language:#0400;
+
+
+	mso-fareast-language:#0400;
+
+
+	mso-bidi-language:#0400;}
+
+
+</style>
+
+
+<![endif]--><font
+    face="Arial" size="3"><span style="font-size: 12pt; font-family: Arial;" lang="EN-GB"></span></font>http://www.w3.org/TR/2001/REC-xml-c14n-20010315&quot;,
+    the signature's URI reference is empty and the certificate is attached to the token; this
+    is the format defined in OGC 07-118 v0.0.5 or before<br>
+    - otherwise (or if SAML_OLD_SIGNATURE is absent),the canonicalization method algorithm
+    used in signature is &quot;http://www.w3.org/2001/10/xml-exc-c14n#&quot;, the signature's
+    URI reference refers to SAML Assertion and no certificate is attached; this is the format
+    defined in OGC 07-118 v0.0.6 or after.<br>
+    <br>
+    </td>
+    <td style="vertical-align: top;"><br>
+    </td>
+  </tr>
+  <tr>
+    <td style="vertical-align: top;"><br>
+    SAML_TOKEN_ENCRYPTION_ACTIVE<br>
+    <br>
+    </td>
+    <td style="vertical-align: top;"><br>
+    Optional, flag indicating whether the SAML token shall be delivered encrypted or not. The
+    value True shall be put in any operational system supposed to comply with OGC 07-118. The
+    value False is mainly dedicated to testing purpose. If missing, then True is assumed.<br>
+    <br>
+    </td>
+    <td style="vertical-align: top;"><br>
+    </td>
+  </tr>
+  <tr>
+    <td width="19%" height="19">LOG4J_CONFIG_LOCATION</td>
+    <td width="81%" height="19"><br>
+    The location of the Log4j configuration file, e.g.<br>
+    $TOMCAT_HOME/webapps/axis2/WEB-INF/services/sts.aar.aar/authentication-service-log4j.properties<br>
+    <br>
+    </td>
+    <td style="vertical-align: top;"><br>
+    </td>
+  </tr>
+  <tr>
+    <td style="vertical-align: top;"><br>
+    LOCAL_STS_URN<br>
+    <br>
+    </td>
+    <td style="vertical-align: top;"><br>
+    Optional. used for STS federation only. It is an arbitrary URN identifying the present STS
+    instance. If set, the STS as the ability to be federated, i.e. to receive RST from another
+    STS. Any RST, containing an element &lt;DelegateTo&gt; having a URN content equal to
+    LOCAL_STS_URN is considered as coming from a federating STS; in that case the SAML token
+    is returned ensigned and unencrypted.<br>
+    Note that this URN shall be declared also in the federated_sts.properties file of the
+    federating STS (see below)<br>
+    <br>
+    </td>
+    <td style="vertical-align: top;"><br>
+    </td>
+  </tr>
+</tbody>
+</table>
+
+<p><br>
+<span style="font-weight: bold;">federated_sts.properties file</span><br>
+</p>
+
+<p>If the STS is a federating STS, i.e. it shall be able to forward RST to other STS, then
+the following file shall be filled in:<br>
+&nbsp;&nbsp;&nbsp;&nbsp; $TOMCAT_HOME/webapps/axis2/WEB-INF/services/sts.aar.aar/<span
+style="font-weight: bold;">federated_sts.properties</span><br>
+(if the STS is not federating, then the file can be empty or even missing). The purpose of
+this file is to map the STS URN present in &lt;DelegateTo&gt; element of the RST, if any,
+to the actual URL of the corresponding federated STS. The format is a set of lines with
+equalities<br>
+</p>
+
+<p>&nbsp;&nbsp;&nbsp; <span style="font-style: italic;">delegated_sts_urn</span> = <span
+style="font-style: italic;">delegated_sts_url</span><br>
+</p>
+
+<p>Not that the colon character in the urn shall be escaped with a backslash character.
+For instance, <br>
+<br>
+&nbsp;&nbsp;&nbsp; urn\:ceos\:def\:epr\:spacebel\:1.0\:federated-sts =
+http://localhost:8080/axis2/services/sts<br>
+<br>
+<span style="font-weight: bold;">authentication-service-log4j.properties file</span><br>
+</p>
+
+<p>Update the parameter &quot;log4j.appender.logfile.File&quot; in the file
+/stsHome/apache-tomcat-5.5.27/webapps/axis2/WEB-INF/services/sts.aar.aar/authentication-service-log4j.properties
+to point to the service log file, e.g.:</p>
+
+<p>/var/log/sts.log<br>
+<br>
+</p>
+
+<h3>2.6 Test</h3>
+
+<p>This section describes steps to make the first test to verify if the installation done
+in the sections above succeeded.</p>
+
+<p>Step1: prepare test data</p>
+
+<p>Connect to the LDAP directory server to import the test user profile using the input
+data from the file $TOMCAT_HOME/webapps/axis2/WEB-INF/services/sts.aar/ldap/testUsers.ldif</p>
+
+<p>If the import succeeds, there are two test users in the LDAP directory with credentials
+&quot;TestUser1/TestUser1 and TestUser2/TestUser2&quot;.</p>
+
+<p>Step 2: make a SOAP call to the service operation &quot;RequestSecurityToken&quot;.</p>
+
+<p>Using a SOAP client, such as TCP monitor to send the following SOAP message to the
+service at URL <strong><font color="black"><a
+href="http://IP:PORT/axis2/services/AuthenticationService">http://IP:PORT/axis2/services/</a>sts</font></strong><br>
+</p>
+
+<p>Note to replace the IP and PORT with your system values.</p>
+
+<p>&nbsp;SOAP request message:</p>
+
+<p>&lt;soapenv:Envelope<br>
+&nbsp;&nbsp; &nbsp;xmlns:soapenv=&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;&gt;<br>
+&nbsp;&nbsp; &nbsp;&lt;soapenv:Body&gt;<br>
+&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &lt;wst:RequestSecurityToken<br>
+&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+xmlns:wsse=&quot;http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd&quot;<br>
+&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+xmlns:wst=&quot;http://docs.oasis-open.org/ws-sx/ws-trust/200512/&quot;&gt;<br>
+&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;wst:TokenType&gt;<br>
+&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+http://docs.oasis-open.org/wss/oasis-wss-saml-token-profile-1.1#SAMLV1.1<br>
+&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;/wst:TokenType&gt;<br>
+&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;wst:RequestType&gt;<br>
+&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+http://docs.oasis-open.org/ws-sx/ws-trust/200512/Issue<br>
+&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;/wst:RequestType&gt;<br>
+&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;wsse:UsernameToken<br>
+&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+xmlns:wsse=&quot;http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd&quot;&gt;<br>
+&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+&lt;wsse:Username&gt;TestUser1&lt;/wsse:Username&gt;<br>
+&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+&lt;wsse:Password&gt;TestUser1&lt;/wsse:Password&gt;<br>
+&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;/wsse:UsernameToken&gt;<br>
+&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &lt;/wst:RequestSecurityToken&gt;<br>
+&nbsp;&nbsp; &nbsp;&lt;/soapenv:Body&gt;<br>
+&lt;/soapenv:Envelope&gt;<br>
+<br>
+</p>
+
+<p>&nbsp;</p>
+
+<p>The service should return a SOAP response message that includes the SAML token
+representing the user TestUser1. </p>
+
+<h2><a name="Configure">3. Configure Security Token Service</a></h2>
+
+<h3>3.1 Integrate to Authorisation Services</h3>
+
+<p>This section describes steps to integrate the Security Token Service into an
+authorization service, e.g. a Policy Enforcement Point - PEP (as the consumer of this
+Security Token Service).</p>
+
+<p>The SAML token returned by this STS is in encryption and it will be decrypted by the
+authorisation service during the authorisation processing. To make the encryption and
+decryption works each other, the Security Token Service needs to use the certificate that
+is in pair with the private key of the authorization service. The following steps will
+make the two services integrated: </p>
+
+<p>Step 1: Export the certificate of the authorisation service (public key only).</p>
+
+<p>The following Java keytool command can be used:</p>
+<span lang="EN-GB"
+style="font-size:10.0pt;font-family:
+&quot;Tahoma&quot;,&quot;sans-serif&quot;;mso-fareast-font-family:&quot;Times New Roman&quot;;mso-ansi-language:
+EN-GB;mso-fareast-language:EN-US;mso-bidi-language:AR-SA;layout-grid-mode:line">
+
+<p></span>&nbsp;&nbsp;&nbsp; keytool -export -rfc -alias pep-alias -file pep.cert
+-keystore pep_keystore_filename</p>
+
+<p>Step 2: Import the certificate (obtained in step 1) into the Security Token Service's
+keystore under an alias with name equals to the value of the property
+&quot;AUTHORISATION_CERTIFICATE_ALIAS&quot; (see configuration file
+$TOMCAT_HOME/webapps/axis2/WEB-INF/services/sts.aar/authentication-service.properties).</p>
+
+<p>The following Java keytool command can be used:</p>
+<span lang="EN-GB"
+style="font-size:10.0pt;font-family:
+&quot;Tahoma&quot;,&quot;sans-serif&quot;;mso-fareast-font-family:&quot;Times New Roman&quot;;mso-ansi-language:
+EN-GB;mso-fareast-language:EN-US;mso-bidi-language:AR-SA;layout-grid-mode:line">
+
+<p></span>&nbsp;&nbsp;&nbsp; keytool -import -alias pep-alias -file pep.cert -keystore
+sts_keystore_filename</p>
+
+<p>Step 3: Restart STS<br>
+</p>
+
+<h3>3.2 Register a trusted client on STS<br>
+</h3>
+
+<p>This section describes steps to register a trusted client, so it can issue valid RST
+with signature to STS. This is the case for a STS that is not the IDP server. For this, a
+RST request does not include user password but the user id and the signature of the
+trusted client. For the latter purpose,&nbsp; the STS shall verify the signature thanks to
+the registered public key of the trusted client in its keystore. The registration of a
+trusted client on STS therefore boils down to register the public key of trusted client in
+the STS keystore. This is done with the following steps:<br>
+</p>
+
+<p>Step 1: Export the certificate of the trusted client (public key only).</p>
+
+<p>The following Java keytool command can be used:</p>
+<span lang="EN-GB"
+style="font-size:10.0pt;font-family:
+&quot;Tahoma&quot;,&quot;sans-serif&quot;;mso-fareast-font-family:&quot;Times New Roman&quot;;mso-ansi-language:
+EN-GB;mso-fareast-language:EN-US;mso-bidi-language:AR-SA;layout-grid-mode:line">
+
+<p></span>&nbsp;&nbsp;&nbsp; keytool -export -rfc -alias &lt;client-alias&gt; -file
+client.cert -keystore client_keystore_filename</p>
+
+<p>Step 2: Import the certificate (obtained in step 1) into the STS keystore under a given
+alias <span style="font-style: italic;">A</span></p>
+
+<p>The following Java keytool command can be used:</p>
+<span lang="EN-GB"
+style="font-size:10.0pt;font-family:
+&quot;Tahoma&quot;,&quot;sans-serif&quot;;mso-fareast-font-family:&quot;Times New Roman&quot;;mso-ansi-language:
+EN-GB;mso-fareast-language:EN-US;mso-bidi-language:AR-SA;layout-grid-mode:line">
+
+<p></span>&nbsp;&nbsp;&nbsp; keytool -import -alias &lt;client-alias&gt; -file client.cert
+-keystore sts_keystore_filename</p>
+
+<p>Step 3: Add alias &lt;client-alias&gt;<span style="font-style: italic;"> </span>in the
+coma-separated list defined in the property &quot;CLIENT_CERTIFICATE_ALIASES&quot; (see
+configuration file
+$TOMCAT_HOME/webapps/axis2/WEB-INF/services/sts.aar/authentication-service.properties)</p>
+
+<p>Step 4: Restart STS</p>
+
+<p>To <span style="font-style: italic;">unregister </span>a trusted client on STS, the
+following steps shall be done:</p>
+
+<p>Step 1: Remove the alias corresponding to the client from the coma-separated list
+defined in the property &quot;CLIENT_CERTIFICATE_ALIASES&quot; (see configuration file
+$TOMCAT_HOME/webapps/axis2/WEB-INF/services/sts.aar/authentication-service.properties)</p>
+
+<p>Step 2: Remove the corresponding certificate from STS keystore (this step is optional)</p>
+
+<p>The following Java keytool command can be used:</p>
+<span lang="EN-GB"
+style="font-size:10.0pt;font-family:
+&quot;Tahoma&quot;,&quot;sans-serif&quot;;mso-fareast-font-family:&quot;Times New Roman&quot;;mso-ansi-language:
+EN-GB;mso-fareast-language:EN-US;mso-bidi-language:AR-SA;layout-grid-mode:line">
+
+<p></span>&nbsp;&nbsp;&nbsp; keytool -delete -alias &lt;client-alias&gt; -keystore
+sts_keystore_filename</p>
+
+<p>Step 3: Restart STS</p>
+
+<h3>3.3 Change LDAP Directory Service</h3>
+
+<p>To change to a new LDAP directory service (used by the Security Token Service), update
+the following parameters in the software configuration file
+($TOMCAT_HOME/webapps/axis2/WEB-INF/services/sts.aar/authentication-service.properties): 
+
+<ul>
+  <li>LDAPURL</li>
+  <li>LDAPSearchContext</li>
+  <li>LDAPPrincipal</li>
+  <li>LDAPCredentials</li>
+</ul>
+
+<p>See section 3.5 for more information.</p>
+
+<h3>3.4 Change Keys (Keystore)</h3>
+
+<p>The default configuration of the Security Token Service applies the following keys and
+certificates (stored in the file
+$TOMCAT_HOME/webapps/axis2/WEB-INF/services/sts.aar/keystore/default.kestore): 
+
+<ul>
+  <li>Authentication certificate (via alias defined by property
+    AUTHENTICATION_CERTIFICATE_ALIAS): this certificate is included in a SAML token (used to
+    verify the digital signature)</li>
+  <li>Authentication private key (via alias defined by property
+    AUTHENTICATION_CERTIFICATE_ALIAS): this key is used to sign SAML tokens.</li>
+  <li>Authorisation certificate (via alias defined by property
+    AUTHORISATION_CERTIFICATE_ALIAS): this certificate is used to encrypt/cipher SAML tokens.</li>
+</ul>
+
+<p>Those keys and certificates are generated using the following Ant script function (that
+uses Java JDK 1.7 keystore utility):</p>
+
+<p>&lt;!-- Ant version 1.6.x or higher --&gt;</p>
+
+<table border="1" width="100%">
+  <tr>
+    <td width="100%">&nbsp;&nbsp;&nbsp; &lt;target name=&quot;createDemoKeystore&quot;&gt;<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;mkdir
+    dir=&quot;${build.dir}/${aar.file}/keystore&quot;/&gt;<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;property name=&quot;file&quot;
+    value=&quot;${build.dir}/${aar.file}/keystore/default.keystore&quot;/&gt;<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;property name=&quot;cert.file&quot;
+    value=&quot;${build.dir}/${aar.file}/keystore/default.cert&quot;/&gt;<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;property name=&quot;alias&quot;
+    value=&quot;urn:ceos:def:epr:spacebel:1.0:sts&quot;/&gt;<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;property name=&quot;pass&quot;
+    value=&quot;changeit&quot;/&gt;<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;!-- valid for 10 years--&gt;<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;property name=&quot;validity&quot;
+    value=&quot;3650&quot;/&gt;<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;delete file=&quot;${file}/&quot;/&gt;<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;genkey alias=&quot;${alias}&quot;
+    storepass=&quot;${pass}&quot; keyalg=&quot;RSA&quot; keystore=&quot;${file}&quot;
+    validity=&quot;${validity}&quot;&gt;<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;dname&gt;<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    &lt;param name=&quot;CN&quot; value=&quot;HMA-S&quot;/&gt;<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    &lt;param name=&quot;OU&quot; value=&quot;Space&quot;/&gt;<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    &lt;param name=&quot;O&quot; value=&quot;Spacebel&quot;/&gt;<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    &lt;param name=&quot;C&quot; value=&quot;BE&quot;/&gt;<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/dname&gt;<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/genkey&gt;<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;exec executable=&quot;keytool&quot;&gt;<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;arg
+    value=&quot;-export&quot;/&gt;<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;arg
+    value=&quot;-alias&quot;/&gt;<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;arg
+    value=&quot;${alias}&quot;/&gt;<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;arg
+    value=&quot;-rfc&quot;/&gt;<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;arg
+    value=&quot;-file&quot;/&gt;<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;arg
+    value=&quot;${cert.file}&quot;/&gt;<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;arg
+    value=&quot;-keystore&quot;/&gt;<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;arg
+    value=&quot;${file}&quot;/&gt;<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;arg
+    value=&quot;-storepass&quot;/&gt;<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;arg
+    value=&quot;${pass}&quot;/&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/exec&gt;<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;echo message=&quot;Generated keystore at
+    ${file}&quot;/&gt;<br>
+    &nbsp;&nbsp;&nbsp; &lt;/target&gt;</td>
+  </tr>
+</table>
+
+<p><br>
+To change the default keystore configuration, follows the following steps: 
+
+<ol>
+  <li>update the Security Token Service configuration file for the properites defining alias
+    to retrieve the required keys and certificate mentioned above.</li>
+  <li>update the configuration for the properties defining the keystore password and the
+    private key password.</li>
+  <li>update the configuration for the property defining the location of the keystore file.</li>
+</ol>
+
+<h3>3.5 Configure User Data Included in SAML Token</h3>
+
+<p>The service allows to change names of the SAML attributes (in the SAML tokens) by
+updating the mapping file
+($TOMCAT_HOME/webapps/axis2/WEB-INF/services/sts.aar/saml-ldap-attributes-mapping.properties).
+This file uses Java properties file's format to define the mapping as follows: 
+
+<ul>
+  <li>The property name is the name of LDAP attributes of the user profile.</li>
+  <li>The property value is the name of SAML attributes of the SAML token.</li>
+</ul>
+
+<p>The LDAP attribute name present in the first first association shall be an identifier
+of the user. This attribute will be used by the STS to build up the SAML token, in order
+to set the NameIdentifier element of the subject of NamesIdentifier in
+AuthenticationStatement and AttributeStatement.</p>
+</body>
+</html>
