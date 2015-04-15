@@ -1,0 +1,2 @@
+This component is a Java implementation of the Security Token Service defined in the OGC 07-118 document. It supports the SOAP binding and returns SAML 1.1 security tokens.  Its implementation was funded by the European Space Agency under the HMA initiative.
+The binary package of the HMA Security Token Service is available following the Download link.
